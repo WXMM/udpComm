@@ -26,12 +26,8 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	DECLARE_MESSAGE_MAP()
-
-public:
-	CEdit comm1_1;
-	CEdit comm1_2;
-	CEdit comm1_proc;
+	DECLARE_MESSAGE_MAP();
+	
 
 
 public:
@@ -41,6 +37,9 @@ public:
 	void         recvDta();
 	static UINT  thread1_func(LPVOID pParam);
 	double       bufferDta[20][20];
+	CEdit comm1_1;
+	CEdit comm1_2;
+	CEdit comm1_proc;
 	CEdit comm2_1;
 	CEdit comm2_2;
 	CEdit comm2_proc;
@@ -119,6 +118,33 @@ public:
 public:
 	CFile setFile_;
 	CFile logFile_;
+	bool  isWrite;
 	int connectArr[30][30];
 	int connecterIndex;
+	CButton m_writeLog;
+	afx_msg void OnBnClickedButton3();
+	CStatic m_comm1Text;
+	CStatic m_comm2Text;
+	CStatic m_comm3Text;
+	CStatic m_comm4Text;
+	CStatic m_comm5Text;
+	CStatic m_comm6Text;
+	CStatic m_comm7Text;
+	CStatic m_comm8Text;
+	CStatic m_comm9Text;
+	CStatic m_comm10Text;
+	CStatic m_comm11Text;
+	CStatic m_comm12Text;
+	CStatic m_comm13Text;
+	CStatic m_comm14Text;
+	CStatic m_comm15Text;
+	CStatic m_comm16Text;
+	CStatic m_comm17Text;
+	CStatic m_comm18Text;
+	CStatic m_comm19Text;
+	CStatic m_comm20Text;
+	CStatic m_comm21Text;
+	CStatic m_comm22Text;
+	CStatic m_comm23Text;
+	CStatic m_comm24Text;
 };

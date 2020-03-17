@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "udpComm.h"
 #include "SetNetDlg.h"
+#include "string.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -134,6 +135,31 @@ void CtestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO1, connecter);
 	DDX_Control(pDX, IDC_COMBO2, m_dataPro);
 	DDX_Control(pDX, IDC_EDIT37, comm14_2);
+	DDX_Control(pDX, IDC_BUTTON3, m_writeLog);
+	DDX_Control(pDX, IDC_STATIC1, m_comm1Text);
+	DDX_Control(pDX, IDC_STATIC2, m_comm2Text);
+	DDX_Control(pDX, IDC_STATIC3, m_comm3Text);
+	DDX_Control(pDX, IDC_STATIC4, m_comm4Text);
+	DDX_Control(pDX, IDC_STATIC5, m_comm5Text);
+	DDX_Control(pDX, IDC_STATIC6, m_comm6Text);
+	DDX_Control(pDX, IDC_STATIC7, m_comm7Text);
+	DDX_Control(pDX, IDC_STATIC8, m_comm8Text);
+	DDX_Control(pDX, IDC_STATIC9, m_comm9Text);
+	DDX_Control(pDX, IDC_STATIC10, m_comm10Text);
+	DDX_Control(pDX, IDC_STATIC11, m_comm11Text);
+	DDX_Control(pDX, IDC_STATIC12, m_comm12Text);
+	DDX_Control(pDX, IDC_STATIC13, m_comm13Text);
+	DDX_Control(pDX, IDC_STATIC14, m_comm14Text);
+	DDX_Control(pDX, IDC_STATIC15, m_comm15Text);
+	DDX_Control(pDX, IDC_STATIC16, m_comm16Text);
+	DDX_Control(pDX, IDC_STATIC17, m_comm17Text);
+	DDX_Control(pDX, IDC_STATIC18, m_comm18Text);
+	DDX_Control(pDX, IDC_STATIC19, m_comm19Text);
+	DDX_Control(pDX, IDC_STATIC20, m_comm20Text);
+	DDX_Control(pDX, IDC_STATIC21, m_comm21Text);
+	DDX_Control(pDX, IDC_STATIC22, m_comm22Text);
+	DDX_Control(pDX, IDC_STATIC23, m_comm23Text);
+	DDX_Control(pDX, IDC_STATIC24, m_comm24Text);
 }
 
 BEGIN_MESSAGE_MAP(CtestDlg, CDialogEx)
@@ -143,6 +169,7 @@ BEGIN_MESSAGE_MAP(CtestDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT37, &CtestDlg::OnEnChangeEdit37)
 	ON_EN_CHANGE(IDC_EDIT36, &CtestDlg::OnEnChangeEdit36)
 	ON_BN_CLICKED(IDC_BUTTON2, &CtestDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CtestDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -178,8 +205,10 @@ BOOL CtestDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	isWrite = 0;
 	char GetStr[4096] = {0};
 	//读取配置文件
+	memset(connectArr,0,sizeof(connectArr));
 	setFile_.Open(_T("..//doc//config.txt"),CFile::modeRead);
 	setFile_.Read(GetStr,4096);
 	int nlen = setFile_.GetLength();//获取文件总长度
@@ -204,7 +233,7 @@ BOOL CtestDlg::OnInitDialog()
 		strTemp.Format(_T("连接器%d"),i);
 		connecter.AddString(strTemp);
     }
-	connecter.SetCurSel(0);
+	connecter.SetCurSel(connectArr[0][0]-1);
 
 	for(int i=1;i<=3;i++){
 		strTemp.Format(_T("算法%d"),i);
@@ -212,6 +241,12 @@ BOOL CtestDlg::OnInitDialog()
     }
 	m_dataPro.SetCurSel(0);
 
+
+	//配置通道数和通道名称
+	CString commTem;
+	commTem.Format(_T("通道%2d："),1);
+
+	m_comm1Text.SetWindowTextW(commTem);
 
 	(udpComm*)udpC = new udpComm();
 	m_Thread1 = AfxBeginThread(CtestDlg::thread1_func, this , THREAD_PRIORITY_NORMAL ,0 ,0,NULL);
@@ -422,12 +457,13 @@ void CtestDlg::recvDta(){
 			comm24_2.SetWindowTextW(strTemp);
 
 			for(int i=201;i<=224;i++){
-				strLogTemp.Format(_T("%d:%X\n"),i,tempDtaArr[10][i]);
+				strLogTemp.Format(_T("%d:%X  "),i,tempDtaArr[10][i]);
 				strLog+=strLogTemp;
 			}
-			logFile_.Write(strLog,1024);
-			logFile_.Flush(); //立即写入，不缓冲
-				
+			if(isWrite){
+				logFile_.Write(strLog,1024);
+				logFile_.Flush(); //立即写入，不缓冲
+			}					
 		}
 		Sleep(1000);	
 	}
@@ -475,4 +511,19 @@ void CtestDlg::OnBnClickedButton2()
 	CSetNetDlg *setNet = new CSetNetDlg();
 	setNet->DoModal();
 
+}
+
+
+void CtestDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString strT;
+	m_writeLog.GetWindowTextW(strT);
+	if(strT == TEXT("开始写入")){
+		isWrite==1;
+		m_writeLog.SetWindowTextW(_T("停止写入"));
+	}else{
+		isWrite==0;
+		m_writeLog.SetWindowTextW(_T("开始写入"));
+	}
 }
